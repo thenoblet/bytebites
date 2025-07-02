@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ByteBites" type="CompoundRunConfigurationType">
+    <toRun name="ApiGateway" type="SpringBootApplicationConfigurationType" />
+    <toRun name="AuthService" type="SpringBootApplicationConfigurationType" />
+    <toRun name="ConfigServer" type="SpringBootApplicationConfigurationType" />
+    <toRun name="DiscoveryServer" type="SpringBootApplicationConfigurationType" />
+    <toRun name="NotificationService" type="SpringBootApplicationConfigurationType" />
+    <toRun name="OrderService" type="SpringBootApplicationConfigurationType" />
+    <toRun name="RestaurantService" type="SpringBootApplicationConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>

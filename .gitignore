@@ -35,6 +35,8 @@ build/
 
 ## randoms
 template.xml
+.env
+
 # Compiled class file
 *.class
 
