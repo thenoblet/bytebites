@@ -1,8 +1,7 @@
-package gtp.bytebites.auth.config;
+package gtp.bytebites.audit.config;
 
+import gtp.bytebites.audit.model.AuditLog;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -13,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 /**
  * Configuration class for MongoDB-specific settings.
  * Sets up indexes and other MongoDB configurations required by the application.
- * Currently, configures a TTL (time-to-live) index on audit logs to automatically
+ * Currently configures a TTL (time-to-live) index on audit logs to automatically
  * delete old entries after a specified period.
  */
 @Configuration

@@ -26,10 +26,12 @@
         <module>infrastructure/discovery-server</module>
         <module>infrastructure/config-server</module>
         <module>infrastructure/api-gateway</module>
+
         <module>auth-service</module>
         <module>business-services/restaurant-service</module>
         <module>business-services/order-service</module>
         <module>notification-service</module>
+
         <module>shared-libs/common-events</module>
         <module>shared-libs/common-security</module>
         <module>shared-libs/common-audit</module>
@@ -56,11 +58,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-amqp</artifactId>
                 <version>3.5.3</version>
-            </dependency>
-            <dependency>
-                <groupId>me.paulschwarz</groupId>
-                <artifactId>spring-dotenv</artifactId>
-                <version>3.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.postgresql</groupId>

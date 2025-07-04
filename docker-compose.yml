@@ -1,7 +1,6 @@
 # docker-compose.yml (root level)
 
 services:
-  # Shared Databases
   postgres:
     container_name: postgres-bb
     image: postgres:latest
