@@ -36,6 +36,10 @@ public class User {
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    public boolean isOauth2User() {
+        return oauth2user;
+    }
+
     public enum Role {
         ROLE_CUSTOMER,
         ROLE_RESTAURANT_OWNER,
