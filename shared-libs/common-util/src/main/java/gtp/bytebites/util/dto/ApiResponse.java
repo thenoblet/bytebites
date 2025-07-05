@@ -30,7 +30,6 @@ public class ApiResponse<T> {
         this.data = data;
         this.timestamp = timestamp;
         this.errors = errors;
-
     }
 
     public static <T> ApiResponse<T> success(T data) {
@@ -52,4 +51,26 @@ public class ApiResponse<T> {
         return new ApiResponse<>(false, message, null,
                 LocalDateTime.now().toString(), null);
     }
+
+    // --- Getters ---
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public List<T> getErrors() {
+        return errors;
+    }
+
 }

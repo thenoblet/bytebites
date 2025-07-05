@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-
 @Entity
 @Table(name = "menu_items")
 public class MenuItem {
@@ -33,6 +32,16 @@ public class MenuItem {
 
     public MenuItem() {}
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
     public UUID getId() {
         return id;
     }
@@ -99,7 +108,5 @@ public class MenuItem {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-
-
     }
 }

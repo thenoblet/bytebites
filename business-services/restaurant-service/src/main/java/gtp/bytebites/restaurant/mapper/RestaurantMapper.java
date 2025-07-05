@@ -25,6 +25,7 @@ public class RestaurantMapper {
     public RestaurantSummaryDto toSummaryDto(Restaurant restaurant) {
         if (restaurant == null) return null;
         return new RestaurantSummaryDto(
+                restaurant.getId(),
                 restaurant.getName(),
                 restaurant.getAddress(),
                 restaurant.getCuisineType()
