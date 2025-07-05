@@ -140,12 +140,12 @@
         </dependency>
         <dependency>
             <groupId>gtp</groupId>
-            <artifactId>common-security</artifactId>
+            <artifactId>common-audit</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>gtp</groupId>
-            <artifactId>common-audit</artifactId>
+            <artifactId>common-util</artifactId>
             <version>${project.version}</version>
         </dependency>
 

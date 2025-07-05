@@ -13,6 +13,8 @@ import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
+
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,7 +43,7 @@ public class JwtProvider {
             }
 
             // Ensure proper key length
-            byte[] keyBytes = secret.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+            byte[] keyBytes = jwtConfig.getSecretBytes();
             if (keyBytes.length < 32) { // 256 bits
                 throw new IllegalStateException("JWT secret must be at least 256 bits (32 characters)");
             }
@@ -62,6 +64,7 @@ public class JwtProvider {
         UserDetailsImpl user = (UserDetailsImpl) userDetails;
 
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", user.getUser().getId());
         claims.put("email", user.getUsername());
         claims.put("roles", userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)

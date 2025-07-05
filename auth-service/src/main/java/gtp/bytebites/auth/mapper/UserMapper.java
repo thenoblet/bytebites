@@ -2,6 +2,7 @@ package gtp.bytebites.auth.mapper;
 
 import gtp.bytebites.auth.dto.request.RegisterRequest;
 import gtp.bytebites.auth.dto.response.UserResponse;
+import gtp.bytebites.auth.dto.response.UserSummaryResponse;
 import gtp.bytebites.auth.model.User;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,15 @@ public class UserMapper {
                 user.isOauth2User(),
                 user.getCreatedAt(),
                 user.getUpdatedAt()
+        );
+    }
+
+    public UserSummaryResponse toSummaryResponse(User user) {
+        return new UserSummaryResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getRole()
         );
     }
 }

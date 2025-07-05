@@ -1,6 +1,7 @@
 package gtp.bytebites.auth.service;
 
 import gtp.bytebites.auth.dto.response.UserResponse;
+import gtp.bytebites.auth.dto.response.UserSummaryResponse;
 import gtp.bytebites.auth.mapper.UserMapper;
 import gtp.bytebites.auth.model.User;
 import gtp.bytebites.auth.repository.UserRepository;
@@ -32,9 +33,9 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public Page<UserResponse> getAllUsers(Pageable pageable) {
+    public Page<UserSummaryResponse> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable)
-                .map(userMapper::toResponse);
+                .map(userMapper::toSummaryResponse);
     }
 
     public Optional<User> getUserById(UUID id) {

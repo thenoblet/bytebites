@@ -2,12 +2,12 @@ package gtp.bytebites.auth.controller;
 
 import gtp.bytebites.auth.dto.request.LoginRequest;
 import gtp.bytebites.auth.dto.request.RegisterRequest;
-import gtp.bytebites.auth.dto.response.ApiResponse;
 import gtp.bytebites.auth.dto.response.ErrorResponse;
 import gtp.bytebites.auth.dto.response.JwtResponse;
 import gtp.bytebites.auth.exception.EmailExistException;
 import gtp.bytebites.auth.service.AuthService;
 
+import gtp.bytebites.util.dto.ApiResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;

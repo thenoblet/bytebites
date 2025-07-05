@@ -36,7 +36,7 @@ public class JwtConfig {
      * @return byte array representation of the Base64 encoded secret key
      */
     public byte[] getSecretBytes() {
-        return Base64.getEncoder().encodeToString(secret.getBytes(StandardCharsets.UTF_8)).getBytes();
+        return secret.getBytes(StandardCharsets.UTF_8);
     }
 
     public String getSecret() {
