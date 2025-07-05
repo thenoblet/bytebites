@@ -1,6 +1,7 @@
 package gtp.bytebites.auth.controller;
 
 import gtp.bytebites.auth.dto.response.UserResponse;
+import gtp.bytebites.auth.dto.response.UserSummaryResponse;
 import gtp.bytebites.auth.model.User;
 import gtp.bytebites.auth.service.UserService;
 
@@ -90,8 +91,8 @@ public class UserController {
      * @see Pageable
      */
     @GetMapping("/admin/users")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_MANAGER')")
-    public ResponseEntity<Page<UserResponse>> getAllUsers(@PageableDefault(size = 10) Pageable pageable) {
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<Page<UserSummaryResponse>> getAllUsers(@PageableDefault(size = 10) Pageable pageable) {
         return ResponseEntity.ok(userService.getAllUsers(pageable));
     }
 }

@@ -12,6 +12,10 @@ public class JwtGatewayConfig {
     private String secret;
     private long expirationMs;
 
+    public byte[] getSecretBytes() {
+        return secret.getBytes(StandardCharsets.UTF_8);
+    }
+
     public String getSecret() {
         if (secret == null || secret.length() < 32) {
             throw new IllegalStateException(
@@ -19,10 +23,6 @@ public class JwtGatewayConfig {
                             (secret != null ? secret.length() : "null"));
         }
         return secret;
-    }
-
-    public byte[] getSecretBytes() {
-        return Base64.getEncoder().encodeToString(secret.getBytes(StandardCharsets.UTF_8)).getBytes();
     }
 
     public void setSecret(String secret) {

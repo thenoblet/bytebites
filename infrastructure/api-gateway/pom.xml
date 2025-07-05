@@ -99,11 +99,6 @@
             <artifactId>common-events</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>gtp</groupId>
-            <artifactId>common-security</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

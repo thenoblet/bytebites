@@ -35,6 +35,7 @@
         <module>shared-libs/common-events</module>
         <module>shared-libs/common-security</module>
         <module>shared-libs/common-audit</module>
+        <module>shared-libs/common-util</module>
     </modules>
 
     <dependencyManagement>
