@@ -6,6 +6,8 @@ import gtp.bytebites.order.service.OrderService;
 import gtp.bytebites.util.dto.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -53,11 +55,18 @@ public class OrderController {
         return ResponseEntity.ok(ApiResponse.success(orderDto));
     }
 
-    @GetMapping
+    @GetMapping("/me")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ApiResponse<List<OrderDto>>> getMyOrders(Principal principal) {
         String customerId = principal.getName();
         List<OrderDto> orders = orderService.getOrdersForCustomer(customerId);
+        return ResponseEntity.ok(ApiResponse.success(orders));
+    }
+
+    @GetMapping("/restaurant/{restaurantId}")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<ApiResponse<Page<OrderDto>>> getOrdersForRestaurant(@PathVariable UUID restaurantId, Principal principal, Pageable pageable) {
+        Page<OrderDto> orders = orderService.getOrdersForRestaurant(restaurantId, principal.getName(), pageable);
         return ResponseEntity.ok(ApiResponse.success(orders));
     }
 }

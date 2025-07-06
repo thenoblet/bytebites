@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.util.List;
+import java.util.UUID;
 
 public record CreateRestaurantRequest(
         @NotBlank(message = "Restaurant name cannot be blank")
@@ -17,7 +18,7 @@ public record CreateRestaurantRequest(
         @Size(max = 1000, message = "Description must be under 1000 characters")
         String description,
 
-        String owner,
+        UUID ownerId,
 
         String cuisineType,
 

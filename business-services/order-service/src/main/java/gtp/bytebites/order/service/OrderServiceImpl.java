@@ -1,5 +1,7 @@
 package gtp.bytebites.order.service;
 
+import gtp.bytebites.order.client.RestaurantServiceClient;
+import gtp.bytebites.order.client.dto.RestaurantDto;
 import gtp.bytebites.order.dto.request.PlaceOrderRequest;
 import gtp.bytebites.order.dto.response.OrderDto;
 import gtp.bytebites.order.event.OrderPlacedEvent;
@@ -13,6 +15,9 @@ import gtp.bytebites.util.exception.OrderNotFoundException;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,12 +35,16 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final RabbitTemplate rabbitTemplate;
+    private final RestaurantServiceClient restaurantServiceClient;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, OrderMapper orderMapper, RabbitTemplate rabbitTemplate) {
+    public OrderServiceImpl(
+            OrderRepository orderRepository, OrderMapper orderMapper,
+            RabbitTemplate rabbitTemplate, RestaurantServiceClient restaurantServiceClient) {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
         this.rabbitTemplate = rabbitTemplate;
+        this.restaurantServiceClient = restaurantServiceClient;
     }
 
     @Override
@@ -83,6 +92,19 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orders = orderRepository.findByCustomerId(customerId);
         return orderMapper.toDtos(orders);
     }
+
+    @Override
+    public Page<OrderDto> getOrdersForRestaurant(UUID restaurantId, String ownerId, Pageable pageable) {
+        RestaurantDto restaurant = restaurantServiceClient.getRestaurantById(restaurantId);
+
+        if (restaurant == null || !restaurant.owner().equals(ownerId)) {
+            throw new AccessDeniedException("You do not have permission to view orders for this restaurant.");
+        }
+
+        Page<Order> orders = orderRepository.findByRestaurantId(restaurantId, pageable);
+        return orders.map(orderMapper::toDto);
+    }
+
 
     private void publishOrderPlacedEvent(Order order) {
         List<OrderPlacedEvent.OrderItemData> itemData = order.getItems().stream()

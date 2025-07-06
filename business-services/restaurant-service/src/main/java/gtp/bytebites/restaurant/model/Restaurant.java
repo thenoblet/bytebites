@@ -1,12 +1,14 @@
 package gtp.bytebites.restaurant.model;
 
 import jakarta.persistence.*;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Component
 @Entity
 @Table(name = "restaurants")
 public class Restaurant {
@@ -21,8 +23,8 @@ public class Restaurant {
 
     private String description;
 
-    @Column(name = "owner", nullable = false, updatable = false)
-    private String owner;
+    @Column(name = "owner_id", updatable = false)
+    private UUID ownerId;
 
     @Column(nullable = false)
     private String cuisineType;
@@ -39,10 +41,10 @@ public class Restaurant {
 
     private LocalDateTime updatedAt;
 
-    public Restaurant(String name, String address, String owner, String cuisineType) {
+    public Restaurant(String name, String address, UUID ownerId, String cuisineType) {
         this.name = name;
         this.address = address;
-        this.owner = owner;
+        this.ownerId = ownerId;
         this.cuisineType = cuisineType;
     }
 
@@ -97,12 +99,12 @@ public class Restaurant {
         this.description = description;
     }
 
-    public String getOwner() {
-        return owner;
+    public UUID getOwner() {
+        return ownerId;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setOwner(UUID ownerId) {
+        this.ownerId = ownerId;
     }
 
     public String getCuisineType() {
@@ -144,7 +146,7 @@ public class Restaurant {
     public static class Builder {
         private String name;
         private String address;
-        private String owner;
+        private UUID ownerId;
         private String cuisineType;
         private List<MenuItem> menuItems = new ArrayList<>();
 
@@ -158,8 +160,8 @@ public class Restaurant {
             return this;
         }
 
-        public Builder owner(String owner) {
-            this.owner = owner;
+        public Builder owner(UUID ownerId) {
+            this.ownerId = ownerId;
             return this;
         }
 
@@ -179,7 +181,7 @@ public class Restaurant {
         }
 
         public Restaurant build() {
-            Restaurant restaurant = new Restaurant(this.name, this.address, this.owner, this.cuisineType);
+            Restaurant restaurant = new Restaurant(this.name, this.address, this.ownerId, this.cuisineType);
             restaurant.setMenuItems(this.menuItems != null ? this.menuItems : new ArrayList<>());
             return restaurant;
         }

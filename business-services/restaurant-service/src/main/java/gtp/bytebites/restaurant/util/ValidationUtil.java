@@ -2,9 +2,11 @@ package gtp.bytebites.restaurant.util;
 
 import gtp.bytebites.restaurant.model.Restaurant;
 import gtp.bytebites.restaurant.repository.RestaurantRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -32,10 +34,13 @@ public class ValidationUtil {
             return false;
         }
 
-        String currentPrincipalName = authentication.getName();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        UUID userId = UUID.fromString(jwt.getClaim("userId"));
+
+
         return restaurantRepository.findById(restaurantId)
                 .map(Restaurant::getOwner)
-                .map(owner -> owner.equals(currentPrincipalName))
+                .map(owner -> owner.equals(userId))
                 .orElse(false);
     }
 }

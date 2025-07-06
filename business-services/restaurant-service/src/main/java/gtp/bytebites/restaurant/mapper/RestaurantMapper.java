@@ -37,7 +37,7 @@ public class RestaurantMapper {
         return Restaurant.builder()
                 .name(request.name())
                 .address(request.address())
-                .owner(request.owner())
+                .owner(request.ownerId())
                 .cuisineType(request.cuisineType())
                 .menuItems(request.menuItems())
                 .build();

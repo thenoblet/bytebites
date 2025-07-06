@@ -14,7 +14,7 @@ import java.util.UUID;
 @Table(name = "orders")
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private UUID id;
 
     @Column(nullable = false, updatable = false)
@@ -162,7 +162,6 @@ public class Order {
         private LocalDateTime createdAt;
         private List<OrderItem> items = new ArrayList<>();
 
-        // Fluent setters that return the builder for chaining
         public OrderBuilder id(UUID id) { this.id = id; return this; }
         public OrderBuilder customerId(String customerId) { this.customerId = customerId; return this; }
         public OrderBuilder restaurantId(UUID restaurantId) { this.restaurantId = restaurantId; return this; }
@@ -171,7 +170,6 @@ public class Order {
         public OrderBuilder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
         public OrderBuilder items(List<OrderItem> items) { this.items = items; return this; }
 
-        // The final build method that creates the Order instance
         public Order build() {
             return new Order(this);
         }
