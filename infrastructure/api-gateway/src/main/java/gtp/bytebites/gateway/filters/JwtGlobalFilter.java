@@ -51,16 +51,17 @@ public class JwtGlobalFilter implements GlobalFilter, Ordered {
         }
 
         return this.jwtDecoder.decode(token)
-            .flatMap(jwt -> {
-                ServerHttpRequest enrichedRequest = enrichRequest(request, jwt);
-                log.debug("Token validated successfully. Enriched request for path: {}", path);
-                ServerWebExchange enrichedExchange = exchange.mutate().request(enrichedRequest).build();
-                return chain.filter(enrichedExchange);
-            })
-            .onErrorResume(e -> {
-                log.error("Invalid token for path: {}. Error: {}", path, e.getMessage());
-                return unauthorized(exchange);
-            });
+                .flatMap(jwt -> {
+                    ServerHttpRequest enrichedRequest = enrichRequest(request, jwt);
+                    log.debug("Token validated successfully. User ID: {}, Roles: {}",
+                            jwt.getClaim("userId"),
+                            jwt.getClaimAsStringList("roles"));
+                    return chain.filter(exchange.mutate().request(enrichedRequest).build());
+                })
+                .onErrorResume(e -> {
+                    log.error("Invalid token: {}", e.getMessage());
+                    return unauthorized(exchange);
+                });
     }
 
     private String extractToken(ServerHttpRequest request) {
@@ -76,17 +77,15 @@ public class JwtGlobalFilter implements GlobalFilter, Ordered {
     }
 
     private ServerHttpRequest enrichRequest(ServerHttpRequest request, Jwt jwt) {
-        String userId = jwt.getSubject();
-
+        // Get userId from custom claim (not from jwt.getId())
+        String userId = jwt.getClaim("userId"); // This matches your token generation
+        String email = jwt.getSubject();
         List<String> rolesList = jwt.getClaimAsStringList("roles");
-        String rolesHeader = (rolesList != null && !rolesList.isEmpty())
-                ? String.join(",", rolesList)
-                : "";
-
-        log.debug("Enriching request with X-User-Id: [{}] and X-User-Roles: [{}]", userId, rolesHeader);
+        String rolesHeader = String.join(",", rolesList != null ? rolesList : List.of());
 
         return request.mutate()
                 .header("X-User-Id", userId)
+                .header("X-User-Email", email)
                 .header("X-User-Roles", rolesHeader)
                 .build();
     }

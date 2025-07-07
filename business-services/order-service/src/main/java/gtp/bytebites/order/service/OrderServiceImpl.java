@@ -1,10 +1,11 @@
 package gtp.bytebites.order.service;
 
+import gtp.bytebites.events.event.OrderPlacedEvent;
 import gtp.bytebites.order.client.RestaurantServiceClient;
 import gtp.bytebites.order.client.dto.RestaurantDto;
 import gtp.bytebites.order.dto.request.PlaceOrderRequest;
 import gtp.bytebites.order.dto.response.OrderDto;
-import gtp.bytebites.order.event.OrderPlacedEvent;
+import gtp.bytebites.order.event.OrderEventPublisher;
 import gtp.bytebites.order.mapper.OrderMapper;
 import gtp.bytebites.order.model.Order;
 import gtp.bytebites.order.model.OrderItem;
@@ -13,7 +14,6 @@ import gtp.bytebites.order.repository.OrderRepository;
 import gtp.bytebites.util.dto.ApiResponse;
 import gtp.bytebites.util.exception.OrderNotFoundException;
 
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,24 +26,23 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static gtp.bytebites.events.config.RabbitMQConfig.EXCHANGE_NAME;
-import static gtp.bytebites.events.config.RabbitMQConfig.ROUTING_KEY;
-
 @Service
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
-    private final RabbitTemplate rabbitTemplate;
+    private final OrderEventPublisher orderEventPublisher; // CHANGED: Injected publisher
     private final RestaurantServiceClient restaurantServiceClient;
 
     @Autowired
     public OrderServiceImpl(
-            OrderRepository orderRepository, OrderMapper orderMapper,
-            RabbitTemplate rabbitTemplate, RestaurantServiceClient restaurantServiceClient) {
+            OrderRepository orderRepository,
+            OrderMapper orderMapper,
+            OrderEventPublisher orderEventPublisher, // CHANGED: No more RabbitTemplate here
+            RestaurantServiceClient restaurantServiceClient) {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
-        this.rabbitTemplate = rabbitTemplate;
+        this.orderEventPublisher = orderEventPublisher;
         this.restaurantServiceClient = restaurantServiceClient;
     }
 
@@ -62,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
                     item.setQuantity(itemRequest.quantity());
                     item.setMenuItemName(itemRequest.menuItemName());
                     item.setPrice(itemRequest.price());
-                    item.setOrder(order);
+                    item.setOrder(order); // Set the back-reference to the parent order
                     return item;
                 }).collect(Collectors.toList());
         order.setItems(items);
@@ -74,7 +73,8 @@ public class OrderServiceImpl implements OrderService {
 
         Order savedOrder = orderRepository.save(order);
 
-        publishOrderPlacedEvent(savedOrder);
+        OrderPlacedEvent event = orderMapper.toOrderPlacedEvent(savedOrder);
+        orderEventPublisher.publishOrderPlaced(event);
 
         OrderDto orderDto = orderMapper.toDto(savedOrder);
         return ApiResponse.success(orderDto, "Order placed successfully.");
@@ -103,25 +103,5 @@ public class OrderServiceImpl implements OrderService {
 
         Page<Order> orders = orderRepository.findByRestaurantId(restaurantId, pageable);
         return orders.map(orderMapper::toDto);
-    }
-
-
-    private void publishOrderPlacedEvent(Order order) {
-        List<OrderPlacedEvent.OrderItemData> itemData = order.getItems().stream()
-                .map(item -> new OrderPlacedEvent.OrderItemData(
-                        item.getMenuItemId(),
-                        item.getMenuItemName(),
-                        item.getQuantity()))
-                .collect(Collectors.toList());
-
-        OrderPlacedEvent event = new OrderPlacedEvent(
-                order.getId(),
-                order.getCustomerId(),
-                order.getRestaurantId(),
-                order.getTotalPrice(),
-                itemData
-        );
-
-        rabbitTemplate.convertAndSend(EXCHANGE_NAME, ROUTING_KEY, event);
     }
 }

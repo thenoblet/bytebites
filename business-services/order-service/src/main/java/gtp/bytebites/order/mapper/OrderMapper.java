@@ -1,9 +1,9 @@
 package gtp.bytebites.order.mapper;
 
+import gtp.bytebites.events.event.OrderPlacedEvent;
 import gtp.bytebites.order.dto.request.PlaceOrderRequest;
 import gtp.bytebites.order.dto.response.OrderDto;
 import gtp.bytebites.order.dto.response.OrderItemDto;
-import gtp.bytebites.order.event.OrderPlacedEvent;
 import gtp.bytebites.order.model.Order;
 import gtp.bytebites.order.model.OrderItem;
 import gtp.bytebites.order.model.OrderStatus;

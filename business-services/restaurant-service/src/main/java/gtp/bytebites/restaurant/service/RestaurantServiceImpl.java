@@ -1,6 +1,5 @@
 package gtp.bytebites.restaurant.service;
 
-import gtp.bytebites.restaurant.dto.request.CreateRestaurantRequest;
 import gtp.bytebites.restaurant.dto.response.MenuDto;
 import gtp.bytebites.restaurant.dto.response.RestaurantDto;
 import gtp.bytebites.restaurant.dto.response.RestaurantSummaryDto;
@@ -11,7 +10,6 @@ import gtp.bytebites.restaurant.model.MenuItem;
 import gtp.bytebites.restaurant.model.Restaurant;
 import gtp.bytebites.restaurant.repository.MenuItemRepository;
 import gtp.bytebites.restaurant.repository.RestaurantRepository;
-import gtp.bytebites.security.service.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,25 +25,20 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final MenuItemRepository menuItemRepository;
     private final RestaurantMapper restaurantMapper;
     private final MenuMapper menuItemMapper;
-    private final SecurityService securityService;
-
     @Autowired
     public RestaurantServiceImpl(RestaurantRepository restaurantRepository,
                                  MenuItemRepository menuItemRepository,
                                  RestaurantMapper restaurantMapper,
-                                 MenuMapper menuItemMapper,
-                                 SecurityService securityService) {
+                                 MenuMapper menuItemMapper) {
         this.restaurantRepository = restaurantRepository;
         this.menuItemRepository = menuItemRepository;
         this.restaurantMapper = restaurantMapper;
         this.menuItemMapper = menuItemMapper;
-        this.securityService = securityService;
     }
 
     @Transactional
     @Override
     public RestaurantDto saveRestaurant(Restaurant restaurant) {
-        restaurant.setOwner(securityService.getCurrentUserId());
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
         return restaurantMapper.toDto(savedRestaurant);
     }
@@ -78,8 +71,6 @@ public class RestaurantServiceImpl implements RestaurantService {
     public MenuItem addMenuItemToRestaurant(UUID restaurantId, MenuDto menuItemDto) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
-
-        securityService.validateOwnershipOrAdmin(restaurant.getOwner());
 
         MenuItem menuItem = menuItemMapper.toEntity(menuItemDto);
         menuItem.setRestaurant(restaurant);

@@ -1,16 +1,14 @@
 package gtp.bytebites.order.event;
 
+import gtp.bytebites.events.config.OrderEventConfig;
+import gtp.bytebites.events.event.OrderPlacedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import static gtp.bytebites.events.config.RabbitMQConfig.EXCHANGE_NAME;
-import static gtp.bytebites.events.config.RabbitMQConfig.ROUTING_KEY;
-
-@Component
+@Service
 public class OrderEventPublisher {
-
     private static final Logger log = LoggerFactory.getLogger(OrderEventPublisher.class);
 
     private final RabbitTemplate rabbitTemplate;
@@ -19,14 +17,18 @@ public class OrderEventPublisher {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void publishOrderPlacedEvent(OrderPlacedEvent event) {
-        try {
-            log.info("Publishing OrderPlacedEvent for orderId: {}", event.orderId());
-            rabbitTemplate.convertAndSend(EXCHANGE_NAME, ROUTING_KEY, event);
-            log.info("Successfully published OrderPlacedEvent for orderId: {}", event.orderId());
-        } catch (Exception e) {
-            log.error("Failed to publish OrderPlacedEvent for orderId: {}. Error: {}", event.orderId(), e.getMessage());
-            // Nancy thinks: In a real system, you'd add retry logic or publish to a "failed events" queue here.
-        }
+    /**
+     * Publishes an OrderPlacedEvent to the central order exchange.
+     * This single method is the only place that needs to know about exchanges
+     * and routing keys for this event.
+     * @param event The event payload to publish.
+     */
+    public void publishOrderPlaced(OrderPlacedEvent event) {
+        log.info("Publishing OrderPlacedEvent for Order ID: {}", event.orderId());
+        rabbitTemplate.convertAndSend(
+                OrderEventConfig.ORDER_EXCHANGE,
+                OrderEventConfig.ORDER_PLACED_ROUTING_KEY,
+                event
+        );
     }
 }

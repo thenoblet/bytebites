@@ -36,8 +36,7 @@ public class RestaurantController {
     @PreAuthorize("hasAnyAuthority('ROLE_RESTAURANT_OWNER', 'ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ApiResponse<RestaurantDto>> createRestaurant(
-            @Valid @RequestBody CreateRestaurantRequest request,
-            Principal principal) {
+            @Valid @RequestBody CreateRestaurantRequest request) {
 
         Restaurant restaurant = restaurantMapper.toEntity(request);
         RestaurantDto createdRestaurant = restaurantService.saveRestaurant(restaurant);

@@ -1,14 +1,12 @@
 package gtp.bytebites.restaurant.model;
 
 import jakarta.persistence.*;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Component
 @Entity
 @Table(name = "restaurants")
 public class Restaurant {
@@ -99,11 +97,11 @@ public class Restaurant {
         this.description = description;
     }
 
-    public UUID getOwner() {
+    public UUID getOwnerId() {
         return ownerId;
     }
 
-    public void setOwner(UUID ownerId) {
+    public void setOwnerId(UUID ownerId) {
         this.ownerId = ownerId;
     }
 

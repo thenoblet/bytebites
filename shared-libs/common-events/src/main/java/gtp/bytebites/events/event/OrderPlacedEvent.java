@@ -1,4 +1,4 @@
-package gtp.bytebites.order.event;
+package gtp.bytebites.events.event;
 
 import java.math.BigDecimal;
 import java.util.List;
