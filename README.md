@@ -52,6 +52,81 @@ graph TD
     style I fill:#607D8B,stroke:#455A64
 ```
 
+#### Database Schema for Services
+```mermaid
+erDiagram
+    USERS ||--o{ RESTAURANTS : owns
+    USERS ||--o{ ORDERS : places
+    RESTAURANTS ||--o{ MENU_ITEMS : contains
+    ORDERS ||--o{ ORDER_ITEMS : contains
+    ORDER_ITEMS }o--|| MENU_ITEMS : references
+    
+    USERS {
+        uuid id PK
+        varchar(60) name
+        varchar(255) email UK
+        varchar(255) password
+        varchar(20) role
+        boolean oauth2_user
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    RESTAURANTS {
+        uuid id PK
+        varchar(255) name
+        text address
+        text description
+        uuid owner_id FK "Not updatable"
+        varchar(50) cuisine_type
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    MENU_ITEMS {
+        uuid id PK
+        uuid restaurant_id FK
+        varchar(255) name
+        text description
+        decimal price
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    ORDERS {
+        uuid id PK
+        uuid customer_id FK
+        uuid restaurant_id FK
+        varchar(20) status
+        decimal total_price
+        timestamp created_at
+        timestamp updated_at
+        timestamp cancelled_at
+    }
+    
+    ORDER_ITEMS {
+        uuid id PK
+        uuid order_id FK
+        uuid menu_item_id FK
+        varchar(255) menu_item_name
+        integer quantity
+        decimal price
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    USERS ||--|{ ENUM_ROLE : has
+    ENUM_ROLE {
+        varchar(20) role
+    }
+
+    ORDERS ||--|{ ENUM_ORDER_STATUS : status
+    ENUM_ORDER_STATUS {
+        varchar(20) status
+    }
+
+```
+
 ## Key Components
 
 ### Core Infrastructure Services
