@@ -95,7 +95,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private Role determineDefaultRole() {
-        return Role.ROLE_RESTAURANT_OWNER;
+        return Role.ROLE_CUSTOMER;
     }
 
     private JwtResponse generateTokenResponse(UserDetailsImpl user) {

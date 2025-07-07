@@ -50,11 +50,6 @@
         </dependency>
 
         <!-- Shared Libraries -->
-        <dependency>
-            <groupId>gtp</groupId>
-            <artifactId>common-events</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

@@ -1,13 +1,16 @@
 package gtp.bytebites.restaurant.service;
 
+import gtp.bytebites.restaurant.dto.response.MenuDto;
 import gtp.bytebites.restaurant.dto.response.RestaurantDto;
 import gtp.bytebites.restaurant.dto.response.RestaurantSummaryDto;
 import gtp.bytebites.restaurant.exception.ResourceNotFoundException;
+import gtp.bytebites.restaurant.mapper.MenuMapper;
 import gtp.bytebites.restaurant.mapper.RestaurantMapper;
 import gtp.bytebites.restaurant.model.MenuItem;
 import gtp.bytebites.restaurant.model.Restaurant;
 import gtp.bytebites.restaurant.repository.MenuItemRepository;
 import gtp.bytebites.restaurant.repository.RestaurantRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,17 +24,23 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final MenuItemRepository menuItemRepository;
     private final RestaurantMapper restaurantMapper;
-
+    private final MenuMapper menuItemMapper;
+    @Autowired
     public RestaurantServiceImpl(RestaurantRepository restaurantRepository,
-                                 MenuItemRepository menuItemRepository, RestaurantMapper restaurantMapper) {
+                                 MenuItemRepository menuItemRepository,
+                                 RestaurantMapper restaurantMapper,
+                                 MenuMapper menuItemMapper) {
         this.restaurantRepository = restaurantRepository;
         this.menuItemRepository = menuItemRepository;
         this.restaurantMapper = restaurantMapper;
+        this.menuItemMapper = menuItemMapper;
     }
 
+    @Transactional
     @Override
     public RestaurantDto saveRestaurant(Restaurant restaurant) {
-        return restaurantMapper.toDto(restaurantRepository.save(restaurant));
+        Restaurant savedRestaurant = restaurantRepository.save(restaurant);
+        return restaurantMapper.toDto(savedRestaurant);
     }
 
     @Override
@@ -42,7 +51,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public RestaurantDto getRestaurantById(UUID restaurantId) {
-        return restaurantMapper.toDto(restaurantRepository.getRestaurantById(restaurantId));
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+        return restaurantMapper.toDto(restaurant);
     }
 
     @Override
@@ -51,11 +62,17 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    @Transactional
     public MenuItem addMenuItemToRestaurant(UUID restaurantId, MenuItem menuItem) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found with id: " + restaurantId));
+        return null;
+    }
 
+    @Transactional
+    @Override
+    public MenuItem addMenuItemToRestaurant(UUID restaurantId, MenuDto menuItemDto) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+
+        MenuItem menuItem = menuItemMapper.toEntity(menuItemDto);
         menuItem.setRestaurant(restaurant);
         return menuItemRepository.save(menuItem);
     }

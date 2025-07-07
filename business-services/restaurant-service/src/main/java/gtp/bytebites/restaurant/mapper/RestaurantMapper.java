@@ -25,6 +25,7 @@ public class RestaurantMapper {
     public RestaurantSummaryDto toSummaryDto(Restaurant restaurant) {
         if (restaurant == null) return null;
         return new RestaurantSummaryDto(
+                restaurant.getId(),
                 restaurant.getName(),
                 restaurant.getAddress(),
                 restaurant.getCuisineType()
@@ -36,7 +37,7 @@ public class RestaurantMapper {
         return Restaurant.builder()
                 .name(request.name())
                 .address(request.address())
-                .owner(request.owner())
+                .owner(request.ownerId())
                 .cuisineType(request.cuisineType())
                 .menuItems(request.menuItems())
                 .build();

@@ -15,9 +15,6 @@ public record CreateMenuRequest(
 
         @NotNull(message = "Price is required")
         @DecimalMin(value = "0.0", inclusive = false, message = "Price must be positive")
-        BigDecimal price,
-
-        @NotNull(message = "Restaurant name is required")
-        Restaurant restaurant
+        BigDecimal price
 ) {
 }
