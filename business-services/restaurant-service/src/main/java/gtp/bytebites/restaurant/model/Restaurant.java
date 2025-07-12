@@ -1,6 +1,11 @@
 package gtp.bytebites.restaurant.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Size;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,16 +14,18 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "restaurants")
+@EntityListeners(AuditingEntityListener.class)
 public class Restaurant {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Size(min = 2, max = 250)
     private String name;
 
     private String address;
 
+    @Size(min = 2, max = 1500)
     private String description;
 
     @Column(name = "owner_id", updatable = false)
@@ -29,14 +36,18 @@ public class Restaurant {
 
     @OneToMany(
             mappedBy = "restaurant",
-            cascade = CascadeType.ALL, // If we delete a restaurant, its menu items go too.
+            cascade = CascadeType.ALL,
             orphanRemoval = true,
-            fetch = FetchType.LAZY // Load menu items only when we explicitly ask for them.
+            fetch = FetchType.LAZY
     )
     private List<MenuItem> menuItems = new ArrayList<>();
 
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     public Restaurant(String name, String address, UUID ownerId, String cuisineType) {

@@ -20,7 +20,6 @@ public interface RestaurantService {
     Page<RestaurantSummaryDto> getAllRestaurants(Pageable pageable);
     RestaurantDto getRestaurantById(UUID restaurantId);
     List<MenuItem> getRestaurantMenu(UUID restaurantId);
-    MenuItem addMenuItemToRestaurant(UUID restaurantId, MenuItem menuItem);
 
     @Transactional
     MenuItem addMenuItemToRestaurant(UUID restaurantId, MenuDto menuItemDto);

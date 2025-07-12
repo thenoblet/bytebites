@@ -27,7 +27,7 @@ public class OrderMapper {
     public Order toEntity(PlaceOrderRequest request) {
         Order order = Order.builder()
                 .restaurantId(request.restaurantId())
-                .status(OrderStatus.PENDING) // Orders always start as PENDING.
+                .status(OrderStatus.PENDING)
                 .build();
 
         request.items().stream()

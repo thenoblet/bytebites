@@ -1,7 +1,7 @@
 package gtp.bytebites.restaurant.util;
 
-import gtp.bytebites.restaurant.model.Restaurant;
 import gtp.bytebites.restaurant.repository.RestaurantRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

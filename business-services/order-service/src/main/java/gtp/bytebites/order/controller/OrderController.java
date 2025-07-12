@@ -64,7 +64,7 @@ public class OrderController {
     }
 
     @GetMapping("/restaurant/{restaurantId}")
-    @PreAuthorize("hasRole('OWNER')")
+    @PreAuthorize("hasRole('RESTAURANT_OWNER')")
     public ResponseEntity<ApiResponse<Page<OrderDto>>> getOrdersForRestaurant(@PathVariable UUID restaurantId, Principal principal, Pageable pageable) {
         Page<OrderDto> orders = orderService.getOrdersForRestaurant(restaurantId, principal.getName(), pageable);
         return ResponseEntity.ok(ApiResponse.success(orders));
