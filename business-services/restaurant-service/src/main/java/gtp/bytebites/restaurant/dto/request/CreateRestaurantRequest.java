@@ -1,7 +1,9 @@
 package gtp.bytebites.restaurant.dto.request;
 
 import gtp.bytebites.restaurant.model.MenuItem;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 import java.util.List;
@@ -20,8 +22,11 @@ public record CreateRestaurantRequest(
 
         UUID ownerId,
 
+        @Size(min = 3, max = 255)
         String cuisineType,
 
+        @NotEmpty(message = "Menu items cannot be empty")
+        @Valid
         List<MenuItem> menuItems
 ) {
 }

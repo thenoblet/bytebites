@@ -18,7 +18,6 @@ public class RestaurantMapper {
                 restaurant.getCuisineType(),
                 restaurant.getCreatedAt(),
                 restaurant.getUpdatedAt()
-
         );
     }
 

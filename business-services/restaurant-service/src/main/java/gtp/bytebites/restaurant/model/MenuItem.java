@@ -1,6 +1,11 @@
 package gtp.bytebites.restaurant.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,6 +22,8 @@ public class MenuItem {
     @Column(nullable = false)
     private String name;
 
+    @NotBlank
+    @Size(min = 2, max = 1200)
     private String description;
 
     @Column(nullable = false)
@@ -26,8 +33,12 @@ public class MenuItem {
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     public MenuItem() {}

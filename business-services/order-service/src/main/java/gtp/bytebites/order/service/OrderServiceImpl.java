@@ -61,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
                     item.setQuantity(itemRequest.quantity());
                     item.setMenuItemName(itemRequest.menuItemName());
                     item.setPrice(itemRequest.price());
-                    item.setOrder(order); // Set the back-reference to the parent order
+                    item.setOrder(order);
                     return item;
                 }).collect(Collectors.toList());
         order.setItems(items);

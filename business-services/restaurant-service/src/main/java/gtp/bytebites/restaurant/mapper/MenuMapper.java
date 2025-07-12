@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MenuMapper {
-
     public MenuDto toDto(MenuItem menuItem) {
         return new MenuDto(
                 menuItem.getId(),
@@ -33,7 +32,6 @@ public class MenuMapper {
             menuItem.setRestaurant(restaurant);
         }
 
-        // createdAt and updatedAt will be handled by @PrePersist and @PreUpdate
         return menuItem;
     }
 }

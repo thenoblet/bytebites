@@ -25,5 +25,17 @@
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip> <!-- Disable repackaging for libraries -->
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     
 </project>

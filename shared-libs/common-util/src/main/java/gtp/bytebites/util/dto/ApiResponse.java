@@ -52,7 +52,6 @@ public class ApiResponse<T> {
                 LocalDateTime.now().toString(), null);
     }
 
-    // --- Getters ---
     public boolean isSuccess() {
         return success;
     }

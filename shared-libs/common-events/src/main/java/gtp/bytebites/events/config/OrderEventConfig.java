@@ -16,6 +16,10 @@ public class OrderEventConfig {
         return new TopicExchange(ORDER_EXCHANGE, true, false);
     }
 
+    /**
+     * This globally available MessageConverter bean is automatically picked up
+     * by RabbitTemplate (for sending) and @RabbitListener (for receiving).
+     */
     @Bean
     public static MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
