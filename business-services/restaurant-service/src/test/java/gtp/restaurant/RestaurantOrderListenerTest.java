@@ -61,7 +61,7 @@ class RestaurantOrderListenerTest {
                 "missingField": "value"
             }
             """;
-        
+
         byte[] malformedMessage = malformedJson.getBytes();
 
         // When/Then
